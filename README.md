@@ -72,7 +72,7 @@ Daily use: `scripts\status.ps1` (what is up, what the last requests used), `scri
 ## Tests
 
 ```powershell
-python -m unittest discover tests      # renders the config with no keys, checks no secret is written
+python -m pip install pyyaml; python -m unittest discover tests      # renders the config with no keys, checks no secret is written
 ```
 
 CI (GitHub Actions): YAML lint, PowerShell ScriptAnalyzer, render test without keys, gitleaks secret scan.
