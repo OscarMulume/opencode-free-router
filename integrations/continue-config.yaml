@@ -1,0 +1,17 @@
+# Continue (VS Code) : a fusionner dans ~/.continue/config.yaml
+name: M-SEC
+version: 1.0.0
+schema: v1
+models:
+  - name: free-auto
+    provider: openai
+    model: free-auto
+    apiBase: http://localhost:4000/v1
+    apiKey: ${{ secrets.LITELLM_MASTER_KEY }}
+    roles: [chat, edit, apply]
+  - name: free-fast
+    provider: openai
+    model: free-fast
+    apiBase: http://localhost:4000/v1
+    apiKey: ${{ secrets.LITELLM_MASTER_KEY }}
+    roles: [autocomplete]

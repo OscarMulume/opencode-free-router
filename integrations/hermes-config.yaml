@@ -1,0 +1,11 @@
+# Hermes Agent : fournisseur compatible OpenAI pointant sur le routeur M-SEC.
+# La cle n'est PAS dans ce fichier : Hermes lit la variable d'environnement LITELLM_MASTER_KEY.
+# Sous WSL : remplacer localhost par l'adresse de l'hote Windows (voir docs/INTEGRATIONS.md).
+model:
+  default: "free-auto"
+  provider: "custom:free-router"
+custom_providers:
+  - name: free-router
+    base_url: "http://localhost:4000/v1"
+    key_env: LITELLM_MASTER_KEY
+    model: free-auto

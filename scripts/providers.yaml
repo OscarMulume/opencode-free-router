@@ -1,0 +1,113 @@
+# Provider registry. A provider is active ONLY if all its environment variables exist.
+# `necessite_carte: true` = signing up requires a bank card: disabled in this repository (ignored by the router and the bench).
+# Model names must be checked against each provider's current official documentation; the bench only keeps models
+# that the provider's /models endpoint actually announces.
+# GitHub Models uses GITHUB_MODELS_TOKEN (a dedicated fine-grained token with `models: read`), never GITHUB_TOKEN.
+fournisseurs:
+- nom: gemini-3.8-flash
+  cles:
+  - GEMINI_API_KEY
+  base: https://generativelanguage.googleapis.com/v1beta/openai
+  liste: https://generativelanguage.googleapis.com/v1beta/openai/models
+  modeles:
+  - gemini-3.8-flash
+  prefixe_liste: models/
+  litellm: gemini/{m}
+- nom: gemini-3.6-flash
+  cles:
+  - GEMINI_API_KEY
+  base: https://generativelanguage.googleapis.com/v1beta/openai
+  liste: https://generativelanguage.googleapis.com/v1beta/openai/models
+  modeles:
+  - gemini-3.6-flash
+  prefixe_liste: models/
+  litellm: gemini/{m}
+- nom: gemini-3.5-flash
+  cles:
+  - GEMINI_API_KEY
+  base: https://generativelanguage.googleapis.com/v1beta/openai
+  liste: https://generativelanguage.googleapis.com/v1beta/openai/models
+  modeles:
+  - gemini-3.5-flash
+  prefixe_liste: models/
+  litellm: gemini/{m}
+- nom: gemini-3.5-flash-lite
+  cles:
+  - GEMINI_API_KEY
+  base: https://generativelanguage.googleapis.com/v1beta/openai
+  liste: https://generativelanguage.googleapis.com/v1beta/openai/models
+  modeles:
+  - gemini-3.5-flash-lite
+  prefixe_liste: models/
+  litellm: gemini/{m}
+- nom: groq
+  cles:
+  - GROQ_API_KEY
+  base: https://api.groq.com/openai/v1
+  liste: https://api.groq.com/openai/v1/models
+  modeles:
+  - openai/gpt-oss-120b
+  - openai/gpt-oss-20b
+  litellm: groq/{m}
+- nom: cerebras
+  cles:
+  - CEREBRAS_API_KEY
+  base: https://api.cerebras.ai/v1
+  liste: https://api.cerebras.ai/v1/models
+  modeles:
+  - gpt-oss-120b
+  - qwen-3-235b-a22b-instruct-2507
+  litellm: cerebras/{m}
+  necessite_carte: true
+- nom: openrouter
+  cles:
+  - OPENROUTER_API_KEY
+  base: https://openrouter.ai/api/v1
+  liste: https://openrouter.ai/api/v1/models
+  modeles: []
+  filtre: :free$
+  litellm: openrouter/{m}
+  necessite_carte: true
+- nom: mistral
+  cles:
+  - MISTRAL_API_KEY
+  base: https://api.mistral.ai/v1
+  liste: https://api.mistral.ai/v1/models
+  modeles:
+  - mistral-small-latest
+  - codestral-latest
+  litellm: mistral/{m}
+  necessite_carte: true
+- nom: github-models
+  cles:
+  - GITHUB_MODELS_TOKEN
+  base: https://models.github.ai/inference
+  liste: https://models.github.ai/catalog/models
+  modeles:
+  - openai/gpt-4.1-mini
+  - openai/gpt-4.1
+  litellm: github/{m}
+  note: 'token dedie, scope models:read ; une source tierce signale le service comme
+    retire : le banc le dira'
+  openai_compat: true
+- nom: cloudflare
+  cles:
+  - CLOUDFLARE_API_TOKEN
+  - CLOUDFLARE_ACCOUNT_ID
+  base: https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/v1
+  liste: null
+  modeles:
+  - '@cf/openai/gpt-oss-120b'
+  - '@cf/openai/gpt-oss-20b'
+  litellm: cloudflare/{m}
+  openai_compat: true
+- nom: nvidia
+  cles:
+  - NVIDIA_API_KEY
+  base: https://integrate.api.nvidia.com/v1
+  liste: https://integrate.api.nvidia.com/v1/models
+  modeles:
+  - z-ai/glm-5.3-flash
+  - deepseek-ai/deepseek-v4.1-flash
+  litellm: nvidia_nim/{m}
+  desactive_si_lent: true

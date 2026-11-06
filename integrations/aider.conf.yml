@@ -1,0 +1,4 @@
+# Aider : a copier dans ~/.aider.conf.yml (ou a la racine du projet). Cle lue dans l'environnement.
+model: openai/free-auto
+openai-api-base: http://localhost:4000/v1
+# la cle vient de la variable OPENAI_API_KEY : $env:OPENAI_API_KEY = $env:LITELLM_MASTER_KEY

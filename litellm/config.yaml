@@ -1,0 +1,20 @@
+# Les groupes (model_list) sont GENERES par scripts/render-config.py depuis providers.yaml et le banc (bench.json).
+model_list: []
+
+router_settings:
+  routing_strategy: simple-shuffle
+  allowed_fails: 0  # 0 = cooldown des le 1er echec (equivaut a 'allowed_fails 1' : 1 echec toleré = 0 de plus)
+  cooldown_time: 300
+  enable_pre_call_checks: true
+  num_retries: 0
+  timeout: 45
+  max_fallbacks: 3
+
+litellm_settings:
+  drop_params: true
+  set_verbose: false
+  callbacks: router_log.proxy_handler_instance
+  request_timeout: 45
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
