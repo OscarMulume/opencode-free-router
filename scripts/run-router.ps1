@@ -71,6 +71,13 @@ try {
     Write-RouteurLog "Ollama indisponible au prechauffage: $($_.Exception.Message)"
 }
 
+# Serveur du message "quotas epuises" sur 127.0.0.1:4010, si pas deja lance.
+try {
+    $null = Invoke-RestMethod -Uri 'http://127.0.0.1:4010/health' -TimeoutSec 2
+} catch {
+    Start-Process -FilePath $venvPython -ArgumentList (Join-Path $PSScriptRoot 'epuise.py') -WindowStyle Hidden
+}
+
 # Auto-reglage (V4) : banc court au demarrage puis toutes les 2 h, en tache de fond.
 $autoreg = Join-Path $PSScriptRoot 'autoreglage.py'
 Start-Job -ScriptBlock {

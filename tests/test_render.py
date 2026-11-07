@@ -48,8 +48,8 @@ class RenderTest(unittest.TestCase):
     def test_registry_is_valid(self):
         registry = yaml.safe_load((ROOT / "scripts" / "providers.yaml").read_text(encoding="utf-8"))["fournisseurs"]
         for entry in registry:
-            self.assertTrue(entry["cles"] and entry["nom"])
-        self.assertEqual({f["nom"] for f in registry if f.get("necessite_carte")}, {"cerebras", "openrouter", "mistral"})
+            self.assertTrue(entry["nom"] and (entry["cles"] or entry.get("local")))
+        self.assertEqual({f["nom"] for f in registry if f.get("necessite_carte")}, set())  # card-free providers only
         gh = next(f for f in registry if f["nom"] == "github-models")
         self.assertEqual(gh["cles"], ["GITHUB_MODELS_TOKEN"])
 

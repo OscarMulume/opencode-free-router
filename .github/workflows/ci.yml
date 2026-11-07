@@ -17,7 +17,7 @@ jobs:
       - name: Render test without keys
         run: python -m unittest discover tests -v
       - name: Python syntax
-        run: python -m py_compile scripts/*.py litellm/router_log.py integrations/client-openai.py
+        run: python -m py_compile scripts/*.py litellm/router_log.py litellm/router_contexte.py integrations/client-openai.py
   powershell:
     runs-on: windows-latest
     steps:

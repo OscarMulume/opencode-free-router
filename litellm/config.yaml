@@ -13,7 +13,9 @@ router_settings:
 litellm_settings:
   drop_params: true
   set_verbose: false
-  callbacks: router_log.proxy_handler_instance
+  callbacks:
+    - router_log.proxy_handler_instance
+    - router_contexte.proxy_handler_instance
   request_timeout: 45
 
 general_settings:

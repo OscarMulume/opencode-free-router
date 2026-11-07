@@ -21,8 +21,10 @@ OpenCode / Aider / Continue / Hermes / any OpenAI client
    | free-auto      big agent requests: only providers MEASURED < 30 s to first token on 30K tokens,
    |                fastest first, local model EXCLUDED
    | free-fast      small requests (< 6K tokens): fastest first, local Ollama as last resort
-   | free-check     same rules as free-auto, reverse order (a second model reviews the first)
-   | free-exhausted instant, explicit answer when every fast provider is out of quota
+   | free-code      heavy code work: best quality score first
+   | free-question  small question: fastest first, local Ollama last
+   | free-check     review: a model DIFFERENT from the best of free-code
+   | free-exhausted instant message with the resume time (scripts/epuise.py, port 4010)
    +----------------+-----------------------------+
         providers: Gemini · Groq · GitHub Models · Cloudflare Workers AI · NVIDIA NIM · Ollama
 ```
@@ -54,15 +56,20 @@ Daily use: `scripts\status.ps1` (what is up, what the last requests used), `scri
 |---|---|---|
 | Google Gemini (Flash, Flash-Lite) | `GEMINI_API_KEY` | free tier, no card |
 | Groq | `GROQ_API_KEY` | free tier, no card; refuses prompts above ~8K tokens/min |
-| GitHub Models | `GITHUB_MODELS_TOKEN` | dedicated fine-grained token with `models: read`; never reuse your git token |
-| Cloudflare Workers AI | `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` | free daily allowance |
-| NVIDIA NIM | `NVIDIA_API_KEY` | trial offer; kept disabled while the bench measures it slow |
+| GitHub Models | `GITHUB_MODELS_TOKEN` | **retired by GitHub (2026-07-30)**: kept in the registry as `retire: true` and ignored; dedicated token only, never your git token |
 | Ollama (local) | none | last resort for small requests only |
-| Cerebras, OpenRouter (`:free`), Mistral | `CEREBRAS_API_KEY`, `OPENROUTER_API_KEY`, `MISTRAL_API_KEY` | **disabled in this repository: sign-up requires a bank card** (`necessite_carte: true`). Paid providers with a small free quota can be added the same way and are active only if you set their key. |
+| Cerebras, OpenRouter, Mistral, NVIDIA, Cloudflare | - | **removed: sign-up requires a bank card or the offer is a trial.** Only card-free providers are kept. |
 
 **Rule:** one account per provider, and respect each provider's terms of use. This project must not be used to create multiple accounts to get around a limit.
 
+## Quality and context
+
+- `scripts/qualite.py` scores each model on 15 coding-agent tasks (code is run in an isolated subprocess); only models under 30 s and >= 60 % enter `free-auto` / `free-code`.
+- `litellm/router_contexte.py` shrinks requests above 80 % of the group's input ceiling (old tool outputs, extractive summary, old messages) so small-window providers such as Groq do not fail. Log: `contexte.log` (sizes only, never message content). `FREE_ROUTER_CONTEXT=0` disables it.
+
 ## Honest limits
+
+- Hermes Agent was not validated against this router yet (authentication error with a custom provider); OpenCode was.
 
 - Free tiers come with **no guarantee**: quotas, models and terms change, and a provider can be saturated at any time. The router reduces stalls; it cannot create capacity.
 - With a single fast provider (for example only Gemini Flash-Lite), a burst of 30K-token requests can still exhaust it; the router then answers with the explicit "quotas exhausted" message.
